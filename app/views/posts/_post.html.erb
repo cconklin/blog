@@ -1,0 +1,14 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <b>
+      <%= post.title %>
+    </b>
+    <div class="pull-right">
+      <%= link_to 'Edit', edit_post_path(post), class: "btn btn-primary btn-xs" %>
+      <%= link_to 'Delete', post, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-xs" %>
+    </div>
+  </div>
+  <div class="panel-body">
+<%= raw post.body %>
+  </div>
+</div>

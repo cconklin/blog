@@ -1,9 +1,0 @@
-.panel.panel-default
-  .panel-heading
-    %b
-      = post.title
-    .pull-right
-      = link_to 'Edit', edit_post_path(post), class: "btn btn-primary btn-xs"
-      = link_to 'Delete', post, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-xs"
-  .panel-body
-    = raw post.body
