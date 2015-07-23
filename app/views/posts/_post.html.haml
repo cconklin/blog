@@ -1,0 +1,8 @@
+.panel.panel-default
+  .panel-heading
+    = post.title
+    (
+    = link_to 'Edit', edit_post_path(post)
+    )
+  .panel-body
+    = raw post.body
