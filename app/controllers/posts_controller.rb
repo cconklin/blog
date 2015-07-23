@@ -2,7 +2,12 @@ class PostsController < ApplicationController
   before_action :set_post, only: [:show, :edit, :update, :destroy]
 
   def index
-    @posts = Post.all
+    if params[:tags].present?
+      @post_tags = Tag.where(id: params[:tags])
+      @posts = Post.with_tags(@post_tags).order(created_at: :desc)
+    else
+      @posts = Post.all.order(created_at: :desc)
+    end
   end
 
   def show
@@ -46,6 +51,6 @@ class PostsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def post_params
-      params.require(:post).permit(:title, :body)
+      params.require(:post).permit(:title, :body, tag_names: [])
     end
 end

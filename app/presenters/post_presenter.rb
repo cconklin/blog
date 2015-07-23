@@ -2,11 +2,8 @@ require 'redcarpet'
 require 'pygments'
 
 class PostPresenter < SimpleDelegator
-  attr_reader :title
   def initialize(post)
     super(post)
-    @title = post.title
-    @markdown_body = post.body
   end
   def body
     renderer = CustomHTML.new
@@ -14,7 +11,14 @@ class PostPresenter < SimpleDelegator
       fenced_code_blocks: true,
       tables: true,
       no_intra_emphasis: true
-    markdown.render(@markdown_body)
+    markdown.render(super)
+  end
+  def tags
+    if tag_names.empty?
+      ["No Tags"]
+    else
+      tag_names
+    end
   end
 end
 

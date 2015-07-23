@@ -42,7 +42,12 @@
       </div>
     <% end %>
     <div class="row">
-      <%= yield %>
+      <div class="col-md-10">
+        <%= yield %>
+      </div>
+      <div class="col-md-2">
+        <%= render "sidebar" %>
+      </div>
     </div>
     <div id="footer">
       <p>&copy; Chase Conklin 2015</p>

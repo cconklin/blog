@@ -132,6 +132,14 @@ RSpec.describe PostsController, type: :controller do
       }.to change(Post, :count).by(-1)
     end
 
+    it "destroys the requested post if it has tags" do
+      post = Post.create! valid_attributes
+      post.tags << Tag.create(name: 'aTAG!')
+      expect {
+        delete :destroy, {:id => post.to_param}, valid_session
+      }.to change(Post, :count).by(-1)
+    end
+
     it "redirects to the posts list" do
       post = Post.create! valid_attributes
       delete :destroy, {:id => post.to_param}, valid_session

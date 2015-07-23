@@ -4,11 +4,17 @@
       <%= post.title %>
     </b>
     <div class="pull-right">
-      <%= link_to 'Edit', edit_post_path(post), class: "btn btn-primary btn-xs" %>
-      <%= link_to 'Delete', post, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-xs" %>
+      <%= link_to 'Edit', edit_post_path(post) %>
+      <%= link_to 'Delete', post, method: :delete, data: { confirm: "Are you sure?" } %>
     </div>
   </div>
   <div class="panel-body">
 <%= raw post.body %>
+  </div>
+  <div class="panel-footer">
+    <% post.tags.each do |tag| %>
+      <span class="label label-primary"><%= tag %></span>
+    <% end %>
+    <span class="pull-right">Posted By: Chase Conklin</span>
   </div>
 </div>
