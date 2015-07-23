@@ -1,16 +1,8 @@
-= form_for(@post) do |f|
-  - if @post.errors.any?
-    #error_explanation
-      %h2
-        = pluralize(@post.errors.count, "error")
-        prohibited this post from being saved:
-      %ul
-        - @post.errors.full_messages.each do |message|
-          %li= message
+= simple_form_for @post do |f|
   .form-group
-    = f.text_field :title, placeholder: "Title", class: "form-control"
+    = f.input :title, placeholder: "Title", label: false
   .form-group
-    = f.text_area :body, class: "form-control", placeholder: "Body", rows: 15
+    = f.input :body, placeholder: "Body", label: false, input_html: { rows: 15 }
   .actions
     = f.submit class: "btn btn-default"
     = link_to 'Back', :back, class: "btn btn-danger"

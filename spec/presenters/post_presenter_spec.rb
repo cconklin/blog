@@ -3,9 +3,10 @@ require_relative "../../app/presenters/post_presenter"
 
 describe PostPresenter do
   let(:presenter) { PostPresenter.new(post) }
+  let(:post) { double("Post", title: "My Big Fat Greek Post", body: body) }
   
   describe "basic presentation" do
-    let(:post) { double("Post", title: "My Big Fat Greek Post", body: "This is *bongos*, indeed.") }
+    let(:body) { "This is *bongos*, indeed." }
   
     it "displays the posts title" do
       expect(presenter.title).to eq("My Big Fat Greek Post")
@@ -22,7 +23,6 @@ describe PostPresenter do
       "puts \"Hello, World!\"\n" <<
       "```"
     end
-    let(:post) { double("Post", title: "My Big Fat Greek Post", body: body) }
     
     it "colorizes code blocks" do
       expected_output = \
@@ -30,6 +30,27 @@ describe PostPresenter do
         "<span class=\"s2\">&quot;Hello, World!&quot;</span>\n" <<
         "</pre></div>"
       expect(presenter.body).to eq(expected_output)      
+    end
+  end
+  
+  describe "displaying tables" do
+    let :body do
+      "Ruby | Python\n" <<
+      "-----|-------\n" <<
+      "One  | Two\n"
+    end
+    
+    it "renders with bootstrap classes" do
+      expected_output = \
+        "<table class='table'>\n" <<
+        "<thead>\n" <<
+        "<tr>\n<th>Ruby</th>\n<th>Python</th>\n</tr>\n" <<
+        "</thead>\n" << 
+        "<tbody>\n" <<
+        "<tr>\n<td>One</td>\n<td>Two</td>\n</tr>\n" <<
+        "</tbody>\n" <<
+        "</table>\n"
+      expect(presenter.body).to eq(expected_output)
     end
   end
   

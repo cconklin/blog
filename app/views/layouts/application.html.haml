@@ -24,12 +24,11 @@
             = link_to 'New Post', new_post_path
             
   .container
+    - if notice.present?
+      .row
+        .alert.alert-success
+          = notice
     .row
       = yield
     #footer
       %p &copy; Chase Conklin 2015
-      /
-        Javascripts
-        \==================================================
-      / Placed at the end of the document so the pages load faster
-      = javascript_include_tag "application"

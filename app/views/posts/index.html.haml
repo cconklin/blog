@@ -1,3 +1,8 @@
-%p#notice= notice
-- @posts.each do |post|
-  = render partial: "post", object: present(post)
+- unless @posts.empty?
+  - @posts.each do |post|
+    = render partial: "post", object: present(post)
+- else
+  .jumbotron
+    %h1 There's Nothing to See Here
+    %p
+      We're working on adding some content, come back later!
