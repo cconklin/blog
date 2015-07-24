@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe PostsController, type: :controller do
-
+  render_views
   # This should return the minimal set of attributes required to create a valid
   # Post. As you add validations to Post, be sure to
   # adjust the attributes here as well.
@@ -27,10 +27,35 @@ RSpec.describe PostsController, type: :controller do
   end
 
   describe "GET #show" do
-    it "assigns the requested post as @post" do
-      post = Post.create! valid_attributes
-      get :show, {:id => post.to_param}, valid_session
-      expect(assigns(:post)).to eq(post)
+    context "with no comments" do
+      let(:post) { Post.create! valid_attributes }
+      before do
+        get :show, {:id => post.to_param}, valid_session      
+      end
+      it "assigns the requested post as @post" do
+        expect(assigns(:post)).to eq(post)
+      end
+    
+      it "assigns a new comment to @comment" do
+        expect(assigns(:comment)).to be_a_new(Comment)
+      end
+    end
+    context "with comments" do
+      let(:comment) { Comment.new body: "Comment" }
+      let(:valid_attributes) {
+        {title: "My Big Fat Greek Post", body: "This is a body!", comments: [comment]}
+      }
+      let(:post) { Post.create! valid_attributes }
+      before do
+        get :show, {:id => post.to_param}, valid_session      
+      end
+      it "assigns the requested post as @post" do
+        expect(assigns(:post)).to eq(post)
+      end
+      
+      it "assigns a new comment to @comment" do
+        expect(assigns(:comment)).to be_a_new(Comment)
+      end
     end
   end
 

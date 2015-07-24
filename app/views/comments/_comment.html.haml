@@ -1,0 +1,6 @@
+%li.list-group-item
+  = link_to "Delete", [comment.post, comment], method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-xs btn-danger pull-right"
+  %h6.list-group-item-heading
+    Chase Conklin
+  %p.list-group-item-text
+    = comment.body

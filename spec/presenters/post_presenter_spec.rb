@@ -3,8 +3,8 @@ require_relative "../../app/presenters/post_presenter"
 
 describe PostPresenter do
   let(:presenter) { PostPresenter.new(post) }
-  let(:post) { double("Post", title: "My Big Fat Greek Post", body: body) }
-  
+  let(:post) { double("Post", title: "My Big Fat Greek Post", body: body, comments: comments) }
+  let(:comments) { [] }
   describe "basic presentation" do
     let(:body) { "This is *bongos*, indeed." }
   
@@ -52,6 +52,34 @@ describe PostPresenter do
         "</table>\n"
       expect(presenter.body).to eq(expected_output)
     end
+  end
+  
+  describe "displaying comments" do
+    let(:body) { "A Post" }
+    
+    context "with no comments" do
+      it "should not render anything" do
+        expect { |b| presenter.comments(&b) }.to_not yield_control
+      end
+    end
+    
+    context "with no replys" do
+      let(:comment) { double("comment", body: "Comment", replys: [], reply?: false) }
+      let(:comments) { [comment] }
+      it "displays the comments" do
+        expect { |b| presenter.comments(&b) }.to yield_with_args(comment)
+      end
+    end
+    
+    context "with replys" do
+      let(:reply) { double("reply", body: "Reply", replys: [], reply?: true) }
+      let(:comment) { double("comment", body: "Comment", replys: [reply], reply?: false) }
+      let(:comments) { [comment, reply] }
+      it "displays only the comment with no replys" do
+        expect { |b| presenter.comments(&b) }.to yield_successive_args(comment)
+      end
+    end
+    
   end
   
 end

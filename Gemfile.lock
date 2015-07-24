@@ -75,6 +75,12 @@ GEM
       activesupport (>= 4.1.0)
     haml (4.0.6)
       tilt
+    haml-rails (0.9.0)
+      actionpack (>= 4.0.1)
+      activesupport (>= 4.0.1)
+      haml (>= 4.0.6, < 5.0)
+      html2haml (>= 1.0.1)
+      railties (>= 4.0.1)
     html2haml (2.0.0)
       erubis (~> 2.7.0)
       haml (~> 4.0.0)
@@ -212,6 +218,7 @@ DEPENDENCIES
   byebug
   coffee-rails (~> 4.1.0)
   haml
+  haml-rails
   html2haml
   jbuilder (~> 2.0)
   jquery-rails

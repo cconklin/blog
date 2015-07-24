@@ -1,1 +1,6 @@
-= render partial: "post", object: @presenter
+= render partial: "posts/post", object: @presenter
+%ul.list-group
+  %li.list-group-item
+    = render "comments/form"
+  - @presenter.comments do |comment|
+    = render "comments/comment", comment: comment

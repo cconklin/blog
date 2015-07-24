@@ -64,4 +64,31 @@ describe Post do
 
     end
   end
+
+  describe "on deletion" do
+    let(:tag) { Tag.create! name: "Tag" }
+    let(:comment) { Comment.create! body: "Comment" }
+    let(:post) { Post.create! title: "My Post", body: "With Tag", tags: [tag], comments: [comment] }
+    let(:taggings) { post.taggings.to_a }
+
+    before do
+      # The taggings must be loaded before the post is destroyed
+      taggings
+      post.destroy
+    end
+
+    it "deletes the comments" do
+      expect(comment).to be_destroyed
+    end
+
+    it "deletes the taggings" do
+      # This test has only one tag -> only one tagging
+      expect(taggings.first).to be_destroyed
+    end
+
+    it "preserves the tags" do
+      expect(tag).to_not be_destroyed
+    end
+
+  end
 end

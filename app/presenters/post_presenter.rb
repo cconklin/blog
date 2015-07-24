@@ -20,6 +20,11 @@ class PostPresenter < SimpleDelegator
       tag_names
     end
   end
+  def comments
+    super.each do |comment|
+      yield comment unless comment.reply?
+    end
+  end
 end
 
 class CustomHTML < Redcarpet::Render::HTML

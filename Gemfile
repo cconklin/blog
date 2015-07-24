@@ -44,6 +44,7 @@ gem 'bootstrap-sass', '~> 3.3.5'
 
 # Use HAML
 gem 'haml'
+gem 'haml-rails'
 gem 'html2haml'
 
 # SimpleForm for forms

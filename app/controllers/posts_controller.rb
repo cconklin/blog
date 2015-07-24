@@ -12,6 +12,7 @@ class PostsController < ApplicationController
 
   def show
     @presenter = PostPresenter.new(@post)
+    @comment = Comment.new
   end
 
   def new

@@ -2,6 +2,7 @@ class Post < ActiveRecord::Base
   validates :title, :body, presence: true
   has_many :taggings, dependent: :destroy
   has_many :tags, through: :taggings
+  has_many :comments, dependent: :destroy
   scope :with_tags, ->(tags) { all.joins(:taggings).where("taggings.tag_id" => tags) }
 
   def tag_names
