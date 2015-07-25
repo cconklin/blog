@@ -25,6 +25,9 @@ class PostPresenter < SimpleDelegator
       yield comment unless comment.reply?
     end
   end
+  def author
+    super.name
+  end
 end
 
 class CustomHTML < Redcarpet::Render::HTML

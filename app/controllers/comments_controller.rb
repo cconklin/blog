@@ -1,8 +1,11 @@
 class CommentsController < ApplicationController
 
+  before_action :authenticate_user!
+
   def create
     @post = Post.find(params[:post_id])
     @comment = @post.comments.build(comment_params)
+    @comment.author = current_user
     @presenter = PostPresenter.new(@post)
     if @comment.save
       redirect_to @post, notice: 'Comment was successfully created.'

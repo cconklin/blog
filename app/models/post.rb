@@ -3,6 +3,7 @@ class Post < ActiveRecord::Base
   has_many :taggings, dependent: :destroy
   has_many :tags, through: :taggings
   has_many :comments, dependent: :destroy
+  belongs_to :author, class_name: "User", foreign_key: "user_id"
   scope :with_tags, ->(tags) { all.joins(:taggings).where("taggings.tag_id" => tags) }
 
   def tag_names

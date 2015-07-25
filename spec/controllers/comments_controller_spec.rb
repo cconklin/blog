@@ -6,11 +6,11 @@ RSpec.describe CommentsController, type: :controller do
   # Comment. As you add validations to Comment, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    {body: "This is a body!", post: comment_post}
+    {body: "This is a body!", post: comment_post, author: user }
   }
 
   let(:comment_post) {
-    Post.create! title: "Post Title", body: "This is a body!"
+    Post.create! title: "Post Title", body: "This is a body!", author: user
   }
 
   let(:invalid_attributes) {
@@ -21,6 +21,13 @@ RSpec.describe CommentsController, type: :controller do
   # in order to pass any filters (e.g. authentication) defined in
   # CommentsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
+
+  let(:user) { User.create! name: "User", email: "user@site.com", password: "my-totally-secure-password" }
+
+  before do
+    @request.env["devise.mapping"] = Devise.mappings[:user]
+    sign_in user
+  end
 
   describe "POST #create" do
     context "with valid params" do
@@ -40,6 +47,12 @@ RSpec.describe CommentsController, type: :controller do
         post :create, {post_id: comment_post.to_param, :comment => valid_attributes}, valid_session
         expect(response).to redirect_to(comment_post)
       end
+      
+      it "sets the posts creator to the current user" do
+        post :create, {post_id: comment_post.to_param, :comment => valid_attributes}, valid_session
+        expect(Comment.last.author).to eq(user)      
+      end
+      
     end
 
     context "with invalid params" do

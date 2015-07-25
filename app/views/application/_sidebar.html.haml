@@ -2,7 +2,7 @@
   Search By Tag
 .list-group
   - if @tags.empty?
-    %li No tags found.
+    %li.list-group-item No tags found.
   - @tags.each do |tag|
     - if params[:tags] && params[:tags].include?(tag.id.to_s)
       = link_to tag.name, remove_tag_path(tag), class: "list-group-item list-group-item-info"

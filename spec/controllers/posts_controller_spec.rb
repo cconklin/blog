@@ -6,7 +6,7 @@ RSpec.describe PostsController, type: :controller do
   # Post. As you add validations to Post, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    {title: "My Big Fat Greek Post", body: "This is a body!"}
+    {title: "My Big Fat Greek Post", body: "This is a body!", author: user}
   }
 
   let(:invalid_attributes) {
@@ -17,6 +17,13 @@ RSpec.describe PostsController, type: :controller do
   # in order to pass any filters (e.g. authentication) defined in
   # PostsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
+
+  let(:user) { User.create! name: "User", email: "user@site.com", password: "my-totally-secure-password" }
+
+  before do
+    @request.env["devise.mapping"] = Devise.mappings[:user]
+    sign_in user
+  end
 
   describe "GET #index" do
     it "assigns all posts as @posts" do
@@ -41,9 +48,9 @@ RSpec.describe PostsController, type: :controller do
       end
     end
     context "with comments" do
-      let(:comment) { Comment.new body: "Comment" }
+      let(:comment) { Comment.new body: "Comment", author: user }
       let(:valid_attributes) {
-        {title: "My Big Fat Greek Post", body: "This is a body!", comments: [comment]}
+        {title: "My Big Fat Greek Post", body: "This is a body!", comments: [comment], author: user}
       }
       let(:post) { Post.create! valid_attributes }
       before do
@@ -92,6 +99,12 @@ RSpec.describe PostsController, type: :controller do
         post :create, {:post => valid_attributes}, valid_session
         expect(response).to redirect_to(Post.last)
       end
+      
+      it "sets the posts creator to the current user" do
+        post :create, {:post => valid_attributes}, valid_session
+        expect(Post.last.author).to eq(user)      
+      end
+      
     end
 
     context "with invalid params" do
