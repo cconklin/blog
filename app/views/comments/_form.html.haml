@@ -1,3 +1,4 @@
 = simple_form_for [@post, @comment] do |f|
-  = f.input :body, as: :text, label: false, placeholder: "Comment"
+  = f.input :body, as: :text, label: false, placeholder: placeholder
+  = f.input :comment_id, input_html: { value: parent }, as: :hidden
   = f.submit "Post Comment", class: "btn btn-primary"

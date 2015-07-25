@@ -1,0 +1,11 @@
+.pull-right
+  = link_to "Delete", [comment.post, comment], method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-xs btn-danger"
+  = link_to "Reply", 'javascript:;', class: "btn btn-xs btn-primary reply-button"
+%h6.list-group-item-heading
+  = comment.author
+  - if comment.subreply?
+    = surround '(', ')' do
+      in response to
+      = link_to comment.reply_to,'javascript:;'
+%p.list-group-item-text
+  = comment.body

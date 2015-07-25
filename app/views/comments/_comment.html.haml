@@ -1,6 +1,15 @@
 %li.list-group-item
-  = link_to "Delete", [comment.post, comment], method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-xs btn-danger pull-right"
-  %h6.list-group-item-heading
-    = comment.author.name
-  %p.list-group-item-text
-    = comment.body
+  = render "comments/base_comment", comment: comment
+%li.list-group-item.hidden
+  .row
+    .col-sm-11.col-sm-offset-1
+      = render "comments/form", parent: comment.id, placeholder: "Reply"
+- comment.replies do |reply|
+  %li.list-group-item
+    .row
+      .col-sm-11.col-sm-offset-1
+        = render "comments/base_comment", comment: reply
+  %li.list-group-item.hidden
+    .row
+      .col-sm-11.col-sm-offset-1
+        = render "comments/form", parent: reply.id, placeholder: "Reply"

@@ -2,6 +2,6 @@
 %ul.list-group
   - if current_user
     %li.list-group-item
-      = render "comments/form"
+      = render "comments/form", parent: nil, placeholder: "Comment"
   - @presenter.comments do |comment|
     = render "comments/comment", comment: comment

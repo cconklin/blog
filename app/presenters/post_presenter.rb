@@ -2,9 +2,6 @@ require 'redcarpet'
 require 'pygments'
 
 class PostPresenter < SimpleDelegator
-  def initialize(post)
-    super(post)
-  end
   def body
     renderer = CustomHTML.new
     markdown = Redcarpet::Markdown.new renderer,
@@ -22,7 +19,7 @@ class PostPresenter < SimpleDelegator
   end
   def comments
     super.each do |comment|
-      yield comment unless comment.reply?
+      yield CommentPresenter.new(comment) unless comment.reply?
     end
   end
   def author

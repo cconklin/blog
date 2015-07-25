@@ -53,8 +53,14 @@ RSpec.describe CommentsController, type: :controller do
         expect(Comment.last.author).to eq(user)      
       end
       
-    end
+      context "when replying to another comment" do
+        it "links the comment" do
+          post :create, {post_id: comment_post.to_param, :comment => valid_attributes.merge(comment_id: 5)}, valid_session
+          expect(assigns(:comment).comment_id).to eq 5
+        end
+      end
 
+    end
     context "with invalid params" do
       it "assigns a newly created but unsaved comment as @comment" do
         post :create, {post_id: comment_post.to_param, :comment => invalid_attributes}, valid_session

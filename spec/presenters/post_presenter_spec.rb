@@ -1,5 +1,6 @@
 require 'spec_helper'
 require_relative "../../app/presenters/post_presenter"
+require_relative "../../app/presenters/comment_presenter"
 
 describe PostPresenter do
   let(:presenter) { PostPresenter.new(post) }
@@ -56,6 +57,11 @@ describe PostPresenter do
   
   describe "displaying comments" do
     let(:body) { "A Post" }
+    before do
+      allow(CommentPresenter).to receive(:new) do |comment|
+        comment
+      end
+    end
     
     context "with no comments" do
       it "should not render anything" do
@@ -72,8 +78,8 @@ describe PostPresenter do
     end
     
     context "with replys" do
-      let(:reply) { double("reply", body: "Reply", replys: [], reply?: true) }
-      let(:comment) { double("comment", body: "Comment", replys: [reply], reply?: false) }
+      let(:reply) { double("reply", body: "Reply", replies: [], reply?: true) }
+      let(:comment) { double("comment", body: "Comment", replies: [reply], reply?: false) }
       let(:comments) { [comment, reply] }
       it "displays only the comment with no replys" do
         expect { |b| presenter.comments(&b) }.to yield_successive_args(comment)
