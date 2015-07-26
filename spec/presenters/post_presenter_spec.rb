@@ -6,6 +6,7 @@ describe PostPresenter do
   let(:presenter) { PostPresenter.new(post) }
   let(:post) { double("Post", title: "My Big Fat Greek Post", body: body, comments: comments) }
   let(:comments) { [] }
+  let(:body) { "A Post" }
   describe "basic presentation" do
     let(:body) { "This is *bongos*, indeed." }
   
@@ -56,7 +57,6 @@ describe PostPresenter do
   end
   
   describe "displaying comments" do
-    let(:body) { "A Post" }
     before do
       allow(CommentPresenter).to receive(:new) do |comment|
         comment
@@ -86,6 +86,30 @@ describe PostPresenter do
       end
     end
     
+  end
+  describe "counting comments" do
+    context "with no comments" do
+      let(:comments) { [] }
+      it "displays 'No Comments'" do
+        expect(presenter.comment_count).to eq("No Comments")
+      end
+      
+    end
+    context "with one comment" do
+      let(:comment) { double("comment", body: "Comment", replies: [], reply?: false) }
+      let(:comments) { [comment] }
+      it "displays '1 Comment'" do
+        expect(presenter.comment_count).to eq("1 Comment")
+      end
+    end
+    context "with many comments" do
+      let(:reply) { double("reply", body: "Reply", replies: [], reply?: true) }
+      let(:comment) { double("comment", body: "Comment", replies: [reply], reply?: false) }
+      let(:comments) { [comment, reply] }
+      it "displays the comment count" do
+        expect(presenter.comment_count).to eq("2 Comments")        
+      end
+    end
   end
   
 end

@@ -1,15 +1,14 @@
-%li.list-group-item
-  = render "comments/base_comment", comment: comment
-%li.list-group-item.hidden
-  .row
-    .col-sm-11.col-sm-offset-1
-      = render "comments/form", parent: comment.id, placeholder: "Reply"
+= render "comments/base_comment", comment: comment
+.media.hidden
+  .media-left.gutter
+  .media-body
+    = render "comments/form", parent: comment.id, placeholder: "Reply"
 - comment.replies do |reply|
-  %li.list-group-item
-    .row
-      .col-sm-11.col-sm-offset-1
-        = render "comments/base_comment", comment: reply
-  %li.list-group-item.hidden
-    .row
-      .col-sm-11.col-sm-offset-1
-        = render "comments/form", parent: reply.id, placeholder: "Reply"
+  .media
+    .media-left.gutter
+    .media-body
+      = render "comments/base_comment", comment: reply
+      .media.hidden
+        .media-left.gutter
+        .media-body
+          = render "comments/form", parent: reply.id, placeholder: "Reply"

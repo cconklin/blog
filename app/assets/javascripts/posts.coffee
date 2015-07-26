@@ -3,4 +3,4 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 $(document).ready ->
   $('.reply-button').on 'click', (event) ->
-    $(this).closest('li').next().removeClass('hidden')
+    $(this).parent().parent().find('.media.hidden').first().removeClass('hidden')

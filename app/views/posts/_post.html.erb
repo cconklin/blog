@@ -11,10 +11,13 @@
   <div class="panel-body">
 <%= raw post.body %>
   </div>
-  <div class="panel-footer">
-    <% post.tags.each do |tag| %>
-      <span class="label label-primary"><%= tag %></span>
-    <% end %>
+  <div class="panel-footer text-center">
+    <div class="pull-left">
+      <% post.tags.each do |tag| %>
+        <span class="label label-primary"><%= tag %></span>
+      <% end %>
+    </div>
+    <span><%= link_to post.comment_count, post_path(post, anchor: "comments") %></span>
     <span class="pull-right">Posted By: <%= post.author %></span>
   </div>
 </div>

@@ -2,6 +2,10 @@ require 'redcarpet'
 require 'pygments'
 
 class PostPresenter < SimpleDelegator
+  def initialize(post)
+    super(post)
+    @post = post
+  end
   def body
     renderer = CustomHTML.new
     markdown = Redcarpet::Markdown.new renderer,
@@ -25,6 +29,16 @@ class PostPresenter < SimpleDelegator
   def author
     super.name
   end
+  
+  def comment_count
+    count = @post.comments.count
+    case count
+    when 0 then "No Comments"
+    when 1 then "1 Comment"
+    else "#{count} Comments"
+    end
+  end
+  
 end
 
 class CustomHTML < Redcarpet::Render::HTML
