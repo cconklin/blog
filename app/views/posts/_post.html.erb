@@ -22,7 +22,11 @@
   <div class="panel-footer text-center">
     <div class="pull-left">
       <% post.tags.each do |tag| %>
-        <span class="label label-primary"><%= tag %></span>
+        <% if params[:tags] && params[:tags].include?(tag.id.to_s) %>
+          <%= link_to tag.name, remove_tag_path(tag), class: "btn btn-primary btn-xs active" %>
+        <% else %>
+          <%= link_to tag.name, tag_path(tag), class: "btn btn-primary btn-xs" %>
+        <% end %>
       <% end %>
     </div>
     <span><%= link_to post.comment_count, post_path(post, anchor: "comments") %></span>

@@ -4,7 +4,7 @@ require_relative "../../app/presenters/comment_presenter"
 
 describe PostPresenter do
   let(:presenter) { PostPresenter.new(post) }
-  let(:post) { double("Post", title: "My Big Fat Greek Post", body: body, comments: comments) }
+  let(:post) { double("Post", title: "My Big Fat Greek Post", body: body, comments: comments, tags: []) }
   let(:comments) { [] }
   let(:body) { "A Post" }
   describe "basic presentation" do
@@ -111,5 +111,4 @@ describe PostPresenter do
       end
     end
   end
-  
 end

@@ -14,13 +14,7 @@ class PostPresenter < SimpleDelegator
       no_intra_emphasis: true
     markdown.render(super)
   end
-  def tags
-    if tag_names.empty?
-      ["No Tags"]
-    else
-      tag_names
-    end
-  end
+
   def comments
     super.each do |comment|
       yield CommentPresenter.new(comment) unless comment.reply?
@@ -38,7 +32,6 @@ class PostPresenter < SimpleDelegator
     else "#{count} Comments"
     end
   end
-  
 end
 
 class CustomHTML < Redcarpet::Render::HTML
