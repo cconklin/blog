@@ -1,0 +1,11 @@
+.panel.panel-default
+  .panel-body
+    %h2
+      Edit
+      = @user.name
+    = simple_form_for([:admin, @user]) do |f|
+      = f.input :name, required: true, autofocus: true
+      = f.input :email, required: true
+      = f.input :password, autocomplete: "off", hint: "leave it blank if you don't want to change it", required: false
+      = f.button :submit, "Update"
+      = link_to "Back", :back
