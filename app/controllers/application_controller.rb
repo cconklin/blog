@@ -4,13 +4,17 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :load_tags
   before_action :configure_permitted_parameters, if: :devise_controller?
-  
+
   def load_tags
     @tags = Tag.joins(:posts).uniq
   end
-  
+
+  rescue_from CanCan::AccessDenied do |exception|
+    redirect_to root_url, :alert => exception.message
+  end
+
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) << :name
   end
-  
+
 end

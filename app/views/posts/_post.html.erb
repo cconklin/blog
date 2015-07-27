@@ -4,11 +4,15 @@
       <%= post.title %>
     </b>
     <div class="pull-right">
-      <%= link_to edit_post_path(post), data: { toggle: "tooltip", placement:"top", title:"Edit" } do %>
-        <span class="glyphicon glyphicon-pencil">
+      <% if can? :update, post %>
+        <%= link_to edit_post_path(post), data: { toggle: "tooltip", placement:"top", title:"Edit" } do %>
+          <span class="glyphicon glyphicon-pencil">
+        <% end %>
       <% end %>
-      <%= link_to post, method: :delete, data: { confirm: "Are you sure?", toggle: "tooltip", placement:"top", title:"Delete" } do %>
-        <span class="glyphicon glyphicon-trash">
+      <% if can? :delete, post %>
+        <%= link_to post, method: :delete, data: { confirm: "Are you sure?", toggle: "tooltip", placement:"top", title:"Delete" } do %>
+          <span class="glyphicon glyphicon-trash">
+        <% end %>
       <% end %>
     </div>
   </div>

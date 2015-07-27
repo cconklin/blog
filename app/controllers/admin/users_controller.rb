@@ -1,14 +1,15 @@
 class Admin::UsersController < ApplicationController
+
+  load_and_authorize_resource
+  before_action :authenticate_user!
+  
   def index
-    @users = User.all
   end
 
   def edit
-    @user = User.find params[:id]
   end
 
   def update
-    @user = User.find params[:id]
     if @user.update(user_params)
       redirect_to [:admin, :users], notice: "User was updated successfully."
     else
@@ -17,7 +18,6 @@ class Admin::UsersController < ApplicationController
   end
 
   def destroy
-    @user = User.find params[:id]
     @user.destroy
     redirect_to [:admin, :users]
   end
@@ -27,6 +27,6 @@ class Admin::UsersController < ApplicationController
   def user_params
     # Get the user params, dump password if it is blank
     user_parameters = params.require(:user).reject { |k, v| v.blank? && k == "password"}
-    user_parameters.permit(:name, :email, :password)
+    user_parameters.permit(:name, :email, :password, roles: [])
   end
 end

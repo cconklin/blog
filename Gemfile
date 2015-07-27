@@ -30,6 +30,10 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 # Use devise for authentication
 gem 'devise'
+gem 'role_model'
+
+# Use cancancan for authorization
+gem 'cancancan'
 
 # Use Thin as the app server
 gem 'thin'

@@ -22,70 +22,178 @@ RSpec.describe CommentsController, type: :controller do
   # CommentsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
-  let(:user) { User.create! name: "User", email: "user@site.com", password: "my-totally-secure-password" }
-
-  before do
-    @request.env["devise.mapping"] = Devise.mappings[:user]
-    sign_in user
-  end
-
-  describe "POST #create" do
-    context "with valid params" do
-      it "creates a new Comment" do
+  context "when not logged in" do
+    let :user do
+      User.create! name: "User", email: "user@site.com", password: "my-totally-secure-password"
+    end
+    describe "POST #create" do
+      it "does not create a comment" do
         expect {
           post :create, {post_id: comment_post.to_param, :comment => valid_attributes}, valid_session
-        }.to change(Comment, :count).by(1)
+        }.to change(Comment, :count).by(0)
       end
-
-      it "assigns a newly created comment as @comment" do
+      it "redirects to the sign in path" do
         post :create, {post_id: comment_post.to_param, :comment => valid_attributes}, valid_session
-        expect(assigns(:comment)).to be_a(Comment)
-        expect(assigns(:comment)).to be_persisted
+        expect(response).to redirect_to(new_user_session_path)
       end
-
-      it "redirects to the comment's post" do
-        post :create, {post_id: comment_post.to_param, :comment => valid_attributes}, valid_session
-        expect(response).to redirect_to(comment_post)
-      end
-      
-      it "sets the posts creator to the current user" do
-        post :create, {post_id: comment_post.to_param, :comment => valid_attributes}, valid_session
-        expect(Comment.last.author).to eq(user)      
-      end
-      
-      context "when replying to another comment" do
-        it "links the comment" do
-          post :create, {post_id: comment_post.to_param, :comment => valid_attributes.merge(comment_id: 5)}, valid_session
-          expect(assigns(:comment).comment_id).to eq 5
-        end
-      end
-
     end
-    context "with invalid params" do
-      it "assigns a newly created but unsaved comment as @comment" do
-        post :create, {post_id: comment_post.to_param, :comment => invalid_attributes}, valid_session
-        expect(assigns(:comment)).to be_a_new(Comment)
+    
+    describe "DELETE #destroy" do
+      it "does not delete the comment" do
+        comment = Comment.create! valid_attributes
+        expect {
+          delete :destroy, {post_id: comment_post.to_param, :id => comment.to_param}, valid_session
+        }.to change(Comment, :count).by(0)
       end
 
-      it "re-renders the posts 'show' template" do
-        post :create, {post_id: comment_post.to_param, :comment => invalid_attributes}, valid_session
-        expect(response).to render_template("posts/show")
+      it "redirects to the sign in page" do
+        comment = Comment.create! valid_attributes
+        delete :destroy, {post_id: comment_post.to_param, :id => comment.to_param}, valid_session
+        expect(response).to redirect_to(new_user_session_path)
       end
     end
   end
 
-  describe "DELETE #destroy" do
-    it "destroys the requested comment" do
-      comment = Comment.create! valid_attributes
-      expect {
+  context "as a logged in user" do
+    let :user do
+      User.create! name: "User", email: "user@site.com", password: "my-totally-secure-password"
+    end
+    before do
+      @request.env["devise.mapping"] = Devise.mappings[:user]
+      sign_in user
+    end
+    
+    describe "POST #create" do
+      context "with valid params" do
+        it "creates a new Comment" do
+          expect {
+            post :create, {post_id: comment_post.to_param, :comment => valid_attributes}, valid_session
+          }.to change(Comment, :count).by(1)
+        end
+
+        it "assigns a newly created comment as @comment" do
+          post :create, {post_id: comment_post.to_param, :comment => valid_attributes}, valid_session
+          expect(assigns(:comment)).to be_a(Comment)
+          expect(assigns(:comment)).to be_persisted
+        end
+
+        it "redirects to the comment's post" do
+          post :create, {post_id: comment_post.to_param, :comment => valid_attributes}, valid_session
+          expect(response).to redirect_to(comment_post)
+        end
+      
+        it "sets the posts creator to the current user" do
+          post :create, {post_id: comment_post.to_param, :comment => valid_attributes}, valid_session
+          expect(Comment.last.author).to eq(user)      
+        end
+      
+        context "when replying to another comment" do
+          it "links the comment" do
+            post :create, {post_id: comment_post.to_param, :comment => valid_attributes.merge(comment_id: 5)}, valid_session
+            expect(assigns(:comment).comment_id).to eq 5
+          end
+        end
+
+      end
+      context "with invalid params" do
+        it "assigns a newly created but unsaved comment as @comment" do
+          post :create, {post_id: comment_post.to_param, :comment => invalid_attributes}, valid_session
+          expect(assigns(:comment)).to be_a_new(Comment)
+        end
+
+        it "re-renders the posts 'show' template" do
+          post :create, {post_id: comment_post.to_param, :comment => invalid_attributes}, valid_session
+          expect(response).to render_template("posts/show")
+        end
+      end
+    end
+    
+    describe "DELETE #destroy" do
+      it "does not delete the comment" do
+        comment = Comment.create! valid_attributes
+        expect {
+          delete :destroy, {post_id: comment_post.to_param, :id => comment.to_param}, valid_session
+        }.to change(Comment, :count).by(0)
+      end
+
+      it "redirects to the home page" do
+        comment = Comment.create! valid_attributes
         delete :destroy, {post_id: comment_post.to_param, :id => comment.to_param}, valid_session
-      }.to change(Comment, :count).by(-1)
+        expect(response).to redirect_to(root_path)
+      end
+    end
+    
+  end
+
+  context "as an administrator" do
+
+    let :user do
+      User.create! name: "User", email: "user@site.com", password: "my-totally-secure-password", roles: [:admin]
     end
 
-    it "redirects to the comments list" do
-      comment = Comment.create! valid_attributes
-      delete :destroy, {post_id: comment_post.to_param, :id => comment.to_param}, valid_session
-      expect(response).to redirect_to(comment_post)
+    before do
+      @request.env["devise.mapping"] = Devise.mappings[:user]
+      sign_in user
+    end
+
+    describe "POST #create" do
+      context "with valid params" do
+        it "creates a new Comment" do
+          expect {
+            post :create, {post_id: comment_post.to_param, :comment => valid_attributes}, valid_session
+          }.to change(Comment, :count).by(1)
+        end
+
+        it "assigns a newly created comment as @comment" do
+          post :create, {post_id: comment_post.to_param, :comment => valid_attributes}, valid_session
+          expect(assigns(:comment)).to be_a(Comment)
+          expect(assigns(:comment)).to be_persisted
+        end
+
+        it "redirects to the comment's post" do
+          post :create, {post_id: comment_post.to_param, :comment => valid_attributes}, valid_session
+          expect(response).to redirect_to(comment_post)
+        end
+      
+        it "sets the posts creator to the current user" do
+          post :create, {post_id: comment_post.to_param, :comment => valid_attributes}, valid_session
+          expect(Comment.last.author).to eq(user)      
+        end
+      
+        context "when replying to another comment" do
+          it "links the comment" do
+            post :create, {post_id: comment_post.to_param, :comment => valid_attributes.merge(comment_id: 5)}, valid_session
+            expect(assigns(:comment).comment_id).to eq 5
+          end
+        end
+
+      end
+      context "with invalid params" do
+        it "assigns a newly created but unsaved comment as @comment" do
+          post :create, {post_id: comment_post.to_param, :comment => invalid_attributes}, valid_session
+          expect(assigns(:comment)).to be_a_new(Comment)
+        end
+
+        it "re-renders the posts 'show' template" do
+          post :create, {post_id: comment_post.to_param, :comment => invalid_attributes}, valid_session
+          expect(response).to render_template("posts/show")
+        end
+      end
+    end
+
+    describe "DELETE #destroy" do
+      it "destroys the requested comment" do
+        comment = Comment.create! valid_attributes
+        expect {
+          delete :destroy, {post_id: comment_post.to_param, :id => comment.to_param}, valid_session
+        }.to change(Comment, :count).by(-1)
+      end
+
+      it "redirects to the comments list" do
+        comment = Comment.create! valid_attributes
+        delete :destroy, {post_id: comment_post.to_param, :id => comment.to_param}, valid_session
+        expect(response).to redirect_to(comment_post)
+      end
     end
   end
 

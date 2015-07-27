@@ -1,8 +1,9 @@
 class CommentsController < ApplicationController
 
   before_action :authenticate_user!
-
+  
   def create
+    authorize! :create, Comment
     @post = Post.find(params[:post_id])
     @comment = @post.comments.build(comment_params)
     @comment.author = current_user
@@ -17,6 +18,7 @@ class CommentsController < ApplicationController
   def destroy
     @post = Post.find(params[:post_id])
     @comment = @post.comments.find(params[:id])
+    authorize! :delete, @comment
     @comment.destroy
     redirect_to @post, notice: 'Comment was successfully destroyed.'
   end

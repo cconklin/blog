@@ -17,14 +17,17 @@ class PostsController < ApplicationController
   end
 
   def new
+    authorize! :create, Post
     @post = Post.new
   end
 
   def edit
+    authorize! :update, @post
   end
 
   def create
     @post = Post.new(post_params)
+    authorize! :create, @post
     @post.author = current_user
     if @post.save
       redirect_to @post, notice: 'Post was successfully created.'
@@ -34,6 +37,7 @@ class PostsController < ApplicationController
   end
 
   def update
+    authorize! :update, @post
     if @post.update(post_params)
       redirect_to @post, notice: 'Post was successfully updated.'
     else
@@ -42,6 +46,7 @@ class PostsController < ApplicationController
   end
 
   def destroy
+    authorize! :delete, @post
     @post.destroy
     redirect_to posts_url, notice: 'Post was successfully destroyed.'
   end

@@ -7,5 +7,13 @@
       = f.input :name, required: true, autofocus: true
       = f.input :email, required: true
       = f.input :password, autocomplete: "off", hint: "leave it blank if you don't want to change it", required: false
+      .form-group.check_boxes.optional
+        %label.control-label.check_boxes.optional Select Roles
+        - for role in User.valid_roles
+          .checkbox
+            %label
+              = check_box_tag "user[roles][]", role, @user.roles.include?(role), :class => 'check_boxes optional', :id => "user_role_#{role.to_s}"
+              =h role.to_s.titleize
+          = hidden_field_tag "user[roles][]", "", :id => "roles_hidden_field"
       = f.button :submit, "Update"
       = link_to "Back", :back

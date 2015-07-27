@@ -1,14 +1,16 @@
 = render "comments/base_comment", comment: comment
-.media.hidden
-  .media-left.gutter
-  .media-body
-    = render "comments/form", parent: comment.id, placeholder: "Reply"
+- if can? :create, Comment
+  .media.hidden
+    .media-left.gutter
+    .media-body
+      = render "comments/form", parent: comment.id, placeholder: "Reply"
 - comment.replies do |reply|
   .media
     .media-left.gutter
     .media-body
       = render "comments/base_comment", comment: reply
-      .media.hidden
-        .media-left.gutter
-        .media-body
-          = render "comments/form", parent: reply.id, placeholder: "Reply"
+      - if can? :create, Comment
+        .media.hidden
+          .media-left.gutter
+          .media-body
+            = render "comments/form", parent: reply.id, placeholder: "Reply"

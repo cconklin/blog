@@ -1,6 +1,6 @@
 = render partial: "posts/post", object: @presenter
 %ul.media-list
-  - if current_user
+  - if can? :create, Comment
     %li.media
       .media-body
         = render "comments/form", parent: nil, placeholder: "Comment"
