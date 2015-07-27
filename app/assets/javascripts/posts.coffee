@@ -4,3 +4,4 @@
 $(document).ready ->
   $('.reply-button').on 'click', (event) ->
     $(this).parent().parent().find('.media.hidden').first().removeClass('hidden')
+  $('[data-toggle="tooltip"]').tooltip()
