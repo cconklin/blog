@@ -4,4 +4,5 @@
   = f.input :tag_names, label: false, input_html: { "data-role" => "tagsinput", multiple: true}, collection: @post.tag_names, as: :select, placeholder: "Add Tags"
   .actions
     = f.submit class: "btn btn-default"
+    = f.submit "Preview", class: "btn btn-primary", name: "preview"
     = link_to 'Back', :back, class: "btn btn-danger"

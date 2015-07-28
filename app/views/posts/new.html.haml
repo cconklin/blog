@@ -1,2 +1,7 @@
-%h1 New Post
-= render 'form'
+.panel.panel-default
+  .panel-heading
+    %b New Post
+  .panel-body
+    = render 'form'
+- if params[:preview]
+  = render 'preview', post: present(@post)

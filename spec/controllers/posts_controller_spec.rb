@@ -158,28 +158,40 @@ RSpec.describe PostsController, type: :controller do
 
     describe "POST #create" do
       context "with valid params" do
-        it "creates a new Post" do
-          expect {
+        context "when saving" do
+          it "creates a new Post" do
+            expect {
+              post :create, {:post => valid_attributes}, valid_session
+            }.to change(Post, :count).by(1)
+          end
+
+          it "assigns a newly created post as @post" do
             post :create, {:post => valid_attributes}, valid_session
-          }.to change(Post, :count).by(1)
-        end
+            expect(assigns(:post)).to be_a(Post)
+            expect(assigns(:post)).to be_persisted
+          end
 
-        it "assigns a newly created post as @post" do
-          post :create, {:post => valid_attributes}, valid_session
-          expect(assigns(:post)).to be_a(Post)
-          expect(assigns(:post)).to be_persisted
-        end
-
-        it "redirects to the created post" do
-          post :create, {:post => valid_attributes}, valid_session
-          expect(response).to redirect_to(Post.last)
-        end
+          it "redirects to the created post" do
+            post :create, {:post => valid_attributes}, valid_session
+            expect(response).to redirect_to(Post.last)
+          end
       
-        it "sets the posts creator to the current user" do
-          post :create, {:post => valid_attributes}, valid_session
-          expect(Post.last.author).to eq(user)      
+          it "sets the posts creator to the current user" do
+            post :create, {:post => valid_attributes}, valid_session
+            expect(Post.last.author).to eq(user)      
+          end
         end
-      
+        context "when previewing" do
+          it "does not create a new Post" do
+            expect {
+              post :create, {:post => valid_attributes, :preview => true}, valid_session
+            }.to change(Post, :count).by(0)            
+          end
+          it "re-renders the 'new' template" do
+            post :create, {:post => valid_attributes, :preview => true}, valid_session
+            expect(response).to render_template("new")
+          end
+        end
       end
 
       context "with invalid params" do

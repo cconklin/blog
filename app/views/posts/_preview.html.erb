@@ -1,0 +1,22 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <b>
+      <%= post.title.presence || "No Title" %>
+    </b>
+  </div>
+  <div class="panel-body">
+<%= raw post.body.presence || "No Content" %>
+  </div>
+  <div class="panel-footer text-center">
+    <div class="pull-left">
+      <% post.tags.each do |tag| %>
+        <%= link_to tag.name, "javascript:;", class: "btn btn-primary btn-xs" %>
+      <% end %>
+    </div>
+    <span><%= post.comment_count %></span>
+    <span class="pull-right">
+      Posted By:
+      <%= post.author %>
+    </span>
+  </div>
+</div>

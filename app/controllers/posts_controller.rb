@@ -12,7 +12,6 @@ class PostsController < ApplicationController
   end
 
   def show
-    @presenter = PostPresenter.new(@post)
     @comment = Comment.new
   end
 
@@ -29,7 +28,9 @@ class PostsController < ApplicationController
     @post = Post.new(post_params)
     authorize! :create, @post
     @post.author = current_user
-    if @post.save
+    if params[:preview]
+      render :new
+    elsif @post.save
       redirect_to @post, notice: 'Post was successfully created.'
     else
       render :new
@@ -38,7 +39,10 @@ class PostsController < ApplicationController
 
   def update
     authorize! :update, @post
-    if @post.update(post_params)
+    @post.assign_attributes(post_params)
+    if params[:preview]
+      render :edit
+    elsif @post.save
       redirect_to @post, notice: 'Post was successfully updated.'
     else
       render :edit

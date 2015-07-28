@@ -7,7 +7,8 @@ class Post < ActiveRecord::Base
   scope :with_tags, ->(tags) { all.joins(:taggings).where("taggings.tag_id" => tags) }
 
   def tag_names
-    tags.pluck(:name)
+    # #pluck does not work when previewing
+    tags.map(&:name)
   end
   def tag_names=(names)
     self.tags = names.reject(&:empty?).map do |name|

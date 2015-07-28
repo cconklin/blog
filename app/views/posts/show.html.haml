@@ -1,10 +1,10 @@
-= render partial: "posts/post", object: @presenter
+= render partial: "posts/post", object: present(@post)
 %ul.media-list
   - if can? :create, Comment
     %li.media
       .media-body
         = render "comments/form", parent: nil, placeholder: "Comment"
-  - @presenter.comments do |comment|
+  - present(@post).comments do |comment|
     %li.media{name: "comments"}
       .media-body
         = render "comments/comment", comment: comment
