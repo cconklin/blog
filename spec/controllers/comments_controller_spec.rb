@@ -64,6 +64,12 @@ RSpec.describe CommentsController, type: :controller do
     end
     
     describe "POST #create" do
+      context "with a nonexistent post" do
+        it "redirects to the posts path" do
+          post :create, {post_id: comment_post.id + 1, :comment => valid_attributes}, valid_session
+          expect(response).to redirect_to(:posts)
+        end
+      end
       context "with valid params" do
         it "creates a new Comment" do
           expect {
@@ -116,6 +122,18 @@ RSpec.describe CommentsController, type: :controller do
         }.to change(Comment, :count).by(0)
       end
 
+      it "redirects to the posts path if the requested post does not exist" do
+        comment = Comment.create! valid_attributes
+        delete :destroy, {post_id: comment_post.id + 1, :id => comment.to_param}, valid_session
+        expect(response).to redirect_to(:posts)
+      end
+
+      it "redirects to the post if the requested comment does not exist" do
+        comment = Comment.create! valid_attributes
+        delete :destroy, {post_id: comment_post.to_param, :id => comment.id + 1}, valid_session
+        expect(response).to redirect_to(comment_post)
+      end
+
       it "redirects to the home page" do
         comment = Comment.create! valid_attributes
         delete :destroy, {post_id: comment_post.to_param, :id => comment.to_param}, valid_session
@@ -137,6 +155,12 @@ RSpec.describe CommentsController, type: :controller do
     end
 
     describe "POST #create" do
+      context "with a nonexistent post" do
+        it "redirects to the posts path" do
+          post :create, {post_id: comment_post.id + 1, :comment => valid_attributes}, valid_session
+          expect(response).to redirect_to(:posts)
+        end
+      end
       context "with valid params" do
         it "creates a new Comment" do
           expect {
@@ -189,7 +213,19 @@ RSpec.describe CommentsController, type: :controller do
         }.to change(Comment, :count).by(-1)
       end
 
-      it "redirects to the comments list" do
+      it "redirects to the posts path if the requested post does not exist" do
+        comment = Comment.create! valid_attributes
+        delete :destroy, {post_id: comment_post.id + 1, :id => comment.to_param}, valid_session
+        expect(response).to redirect_to(:posts)
+      end
+
+      it "redirects to the post if the requested comment does not exist" do
+        comment = Comment.create! valid_attributes
+        delete :destroy, {post_id: comment_post.to_param, :id => comment.id + 1}, valid_session
+        expect(response).to redirect_to(comment_post)
+      end
+
+      it "redirects to the post" do
         comment = Comment.create! valid_attributes
         delete :destroy, {post_id: comment_post.to_param, :id => comment.to_param}, valid_session
         expect(response).to redirect_to(comment_post)

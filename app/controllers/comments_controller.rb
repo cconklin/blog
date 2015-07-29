@@ -2,6 +2,14 @@ class CommentsController < ApplicationController
 
   before_action :authenticate_user!
   
+  rescue_from ActiveRecord::RecordNotFound do |exception|
+    if @post
+      redirect_to @post, :alert => "That comment does not exist."
+    else
+      redirect_to :posts, :alert => "That post does not exist."
+    end
+  end
+
   def create
     authorize! :create, Comment
     @post = Post.find(params[:post_id])
