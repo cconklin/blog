@@ -28,7 +28,7 @@ describe PostPresenter do
     
     it "colorizes code blocks" do
       expected_output = \
-        "<div class=\"highlight\"><pre><span class=\"nb\">puts</span> " << 
+        "<div class=\"highlight\"><pre><span></span><span class=\"nb\">puts</span> " << 
         "<span class=\"s2\">&quot;Hello, World!&quot;</span>\n" <<
         "</pre></div>"
       expect(presenter.body).to eq(expected_output)      
